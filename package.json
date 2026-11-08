@@ -1,0 +1,10 @@
+{
+  "name": "family-tree",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Put your family's history on your own website.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}
