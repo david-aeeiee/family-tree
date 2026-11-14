@@ -10,6 +10,17 @@ function isKnown(value) {
 }
 
 /**
+ * Format one year, marking it as approximate with a "c. " prefix.
+ * @param {string|number} value
+ * @param {boolean} [approx]
+ * @returns {string}
+ */
+function formatYear(value, approx) {
+  const year = String(value).trim();
+  return approx ? `c. ${year}` : year;
+}
+
+/**
  * Format a life span from a birth and a death year.
  *
  * - both years known  -> "1901–1985" (en dash)
@@ -17,21 +28,29 @@ function isKnown(value) {
  * - death year only   -> "d. 1985"
  * - neither known     -> ""
  *
- * @param {{ born?: string|number|null, died?: string|number|null }} [years]
+ * An approximate year is written with "c. " in front of it, e.g.
+ * "c. 1850–1912", "b. c. 1850" or "d. c. 1912".
+ *
+ * @param {{
+ *   born?: string|number|null,
+ *   died?: string|number|null,
+ *   bornApprox?: boolean,
+ *   diedApprox?: boolean,
+ * }} [years]
  * @returns {string}
  */
-export function formatLifeSpan({ born, died } = {}) {
+export function formatLifeSpan({ born, died, bornApprox, diedApprox } = {}) {
   const hasBorn = isKnown(born);
   const hasDied = isKnown(died);
 
   if (hasBorn && hasDied) {
-    return `${String(born).trim()}\u2013${String(died).trim()}`;
+    return `${formatYear(born, bornApprox)}\u2013${formatYear(died, diedApprox)}`;
   }
   if (hasBorn) {
-    return `b. ${String(born).trim()}`;
+    return `b. ${formatYear(born, bornApprox)}`;
   }
   if (hasDied) {
-    return `d. ${String(died).trim()}`;
+    return `d. ${formatYear(died, diedApprox)}`;
   }
   return '';
 }
